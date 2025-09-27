@@ -7,6 +7,17 @@ func modifyRemoteConfiguration(_ configuration: inout UcsResponse) {
     }
     
     modifyAttributes(&configuration.attributes.accountAttributes)
+    modifyAssignedValues(&configuration.assignedValues)
+}
+
+func modifyAssignedValues(_ values: inout [AssignedValue]) {
+    if let index = values.firstIndex(where: { $0.propertyID.name == "enable_pick_and_shuffle_common_capping" }) {
+        values[index].enumValue = EnumValue.with {
+            $0.value = "Disabled"
+        }
+    }
+    
+    values.removeAll(where: { $0.propertyID.scope == "ios-feature-queue" })
 }
 
 func modifyAttributes(_ attributes: inout [String: AccountAttribute]) {
